@@ -1,0 +1,51 @@
+.box{
+  padding: 1em;
+}
+
+.api-box{
+  all:unset;
+  background-color: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-radius: 3px;
+  margin-bottom: 0.2em;
+  padding: 0.3em;
+  width: 15em;
+  text-align: center;
+}
+.api-box:hover,
+.api-box:focus { outline: 1px solid purple }
+
+.api-box-selected{
+  background-color: #e5e5e5;
+  border: 1px solid #d5d5d5;
+}
+
+.green{
+  background-color: green;
+  color: white;
+}
+.orange{
+  background-color: orange;
+  color: white;
+}
+.yellow{
+  background-color: yellow;
+  color: white;
+  color: grey;
+}
+.red{
+  background-color: red;
+  color: white;
+}
+.blue{
+  background-color: blue;
+  color: white;
+}
+.indigo{
+  background-color: indigo;
+  color: white;
+}
+.violet{
+  background-color: violet;
+  color: white;
+}

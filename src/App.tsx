@@ -1,7 +1,12 @@
 import React, { useReducer } from "react";
 import "./App.css";
-import { INITIAL_STATE, apiReducer, ApiNames } from "./apiStates";
+import { INITIAL_STATE, apiReducer, ApiNames, apisMeta } from "./apiStates";
+import Draggable from "react-draggable";
 const worker = new Worker("/my.worker.js");
+
+const getClassesByName = (name: ApiNames): string => {
+  return `api-box ${apisMeta[name].color}`;
+};
 
 function App() {
   const [state, dispatch] = useReducer(apiReducer, INITIAL_STATE);
@@ -14,6 +19,26 @@ function App() {
     dispatch({ type: "ENABLE_API", payload: name });
   };
 
+  const onDragHandler = (event: any, button: any, index: number) => {
+    if (!state.activeDragging) {
+      dispatch({ type: "START_DRAG" });
+    }
+    const buttonRect = button.node.getBoundingClientRect();
+    const offset = button.y / buttonRect.height;
+    if (Math.abs(offset) >= 1) {
+      // next line is in order to achieve the desired offser number (math.floor(-0.5) should be 0, not -1)
+      const adjustedOffset = Math.floor(offset) + (offset > 0 ? 0 : 1);
+      dispatch({
+        type: "MOVE",
+        payload: {
+          dragOffset: { x: buttonRect.width, y: buttonRect.height },
+          offset: adjustedOffset,
+          index,
+        },
+      });
+    }
+  };
+
   const start = (name: string) =>
     dispatch({ type: "START_API", payload: name });
   const finish = (name: string) =>
@@ -21,7 +46,6 @@ function App() {
 
   const handleDemoClick = () => {
     dispatch({ type: "CLEAR_ALL" });
-    console.log(state.apis);
     state.apis.forEach((api) => {
       if (api.checked) {
         switch (api.name) {
@@ -76,31 +100,58 @@ function App() {
 
   return (
     <div>
-      <div>
-        {state.apis.map((api, index) => (
-          <li key={api.name} className="pure-button">
-            <input
-              type="checkbox"
-              checked={api.checked}
-              onChange={() => handleCheckboxChange(api.name)}
-            />
-            {api.name}
-          </li>
-        ))}
-        <button onClick={handleDemoClick}>Execute Demo</button>
+      <div className="box">
+        {state.apis.map((api, index) => {
+          let classes = api.checked ? getClassesByName(api.name) : "api-box";
+          return (
+            <Draggable
+              onDrag={(a, b) => onDragHandler(a, b, index)}
+              onStop={() => dispatch({ type: "STOP_DRAG" })}
+              key={"d-" + api.name}
+              position={api.dragOffset}
+              // positionOffset={api.dragOffset}
+            >
+              <button
+                type="button"
+                key={api.name}
+                className={classes}
+                onClick={() => handleCheckboxChange(api.name)}
+                title={api.name}
+              >
+                {api.name}
+              </button>
+            </Draggable>
+          );
+        })}
       </div>
+      <button onClick={handleDemoClick} className="api-box">
+        Execute Demo
+      </button>
+      <br />
       Initiation sequence
-      <ol>
-        {state.started.map((s) => (
-          <li key={s}>{s}</li>
+      <div className="box">
+        {state.started.map((name) => (
+          <button
+            type="button"
+            key={"s-" + name}
+            className={getClassesByName(name)}
+          >
+            {name}
+          </button>
         ))}
-      </ol>
+      </div>
       Fulfilled sequence
-      <ol>
-        {state.finished.map((response) => (
-          <li key={response}>{response}</li>
+      <div className="box">
+        {state.finished.map((name) => (
+          <button
+            type="button"
+            key={"f-" + name}
+            className={getClassesByName(name)}
+          >
+            {name}
+          </button>
         ))}
-      </ol>
+      </div>
     </div>
   );
 }

@@ -28,11 +28,19 @@ function App() {
     if (Math.abs(offset) >= 1) {
       // next line is in order to achieve the desired offser number (math.floor(-0.5) should be 0, not -1)
       const adjustedOffset = Math.floor(offset) + (offset > 0 ? 0 : 1);
+      //apply constraints
+
+      const appliedConstraints =
+        adjustedOffset > 0
+          ? Math.min(adjustedOffset, state.apis.length - index - 1)
+          : Math.max(adjustedOffset, -index);
+      // adjustedOffset < - index
+      // adjustedOffset >= state.apis.length-index
       dispatch({
         type: "MOVE",
         payload: {
           dragOffset: { x: buttonRect.width, y: buttonRect.height },
-          offset: adjustedOffset,
+          offset: appliedConstraints,
           index,
         },
       });

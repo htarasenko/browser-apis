@@ -34,8 +34,6 @@ function App() {
         adjustedOffset > 0
           ? Math.min(adjustedOffset, state.apis.length - index - 1)
           : Math.max(adjustedOffset, -index);
-      // adjustedOffset < - index
-      // adjustedOffset >= state.apis.length-index
       dispatch({
         type: "MOVE",
         payload: {

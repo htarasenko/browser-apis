@@ -105,59 +105,55 @@ function App() {
   };
 
   return (
-    <div>
-      <div className="box">
-        {state.apis.map((api, index) => {
-          let classes = api.checked ? getClassesByName(api.name) : "api-box";
-          return (
-            <Draggable
-              onDrag={(a, b) => onDragHandler(a, b, index)}
-              onStop={() => dispatch({ type: "STOP_DRAG" })}
-              key={"d-" + api.name}
-              position={api.dragOffset}
-              // positionOffset={api.dragOffset}
-            >
-              <button
-                type="button"
-                key={api.name}
-                className={classes}
-                onClick={() => handleCheckboxChange(api.name)}
-                title={api.name}
+    <div className="layout">
+      <div className="header">
+        <h1>Browser APIs</h1>
+        <p>the order of execution of browser APIs</p>
+      </div>
+      <div className="main">
+        <div className="box">
+          {state.apis.map((api, index) => {
+            let classes = api.checked ? getClassesByName(api.name) : "api-box";
+            return (
+              <Draggable
+                onDrag={(a, b) => onDragHandler(a, b, index)}
+                onStop={() => dispatch({ type: "STOP_DRAG" })}
+                key={"d-" + api.name}
+                position={api.dragOffset}
+                // positionOffset={api.dragOffset}
               >
-                {api.name}
-              </button>
-            </Draggable>
-          );
-        })}
+                <button
+                  type="button"
+                  key={api.name}
+                  className={classes}
+                  onClick={() => handleCheckboxChange(api.name)}
+                  title={api.name}
+                >
+                  {api.name}
+                </button>
+              </Draggable>
+            );
+          })}
+        </div>
+        <br />
+        <button onClick={handleDemoClick}>Execute Demo</button>
+        <br />
+        {state.finished.length
+          ? "Fulfilled sequence:"
+          : "No fulfilled sequence yet"}
+        <div className="box">
+          {state.finished.map((name) => (
+            <button
+              type="button"
+              key={"f-" + name}
+              className={getClassesByName(name)}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
       </div>
-      <button onClick={handleDemoClick} className="api-box">
-        Execute Demo
-      </button>
-      <br />
-      Initiation sequence
-      <div className="box">
-        {state.started.map((name) => (
-          <button
-            type="button"
-            key={"s-" + name}
-            className={getClassesByName(name)}
-          >
-            {name}
-          </button>
-        ))}
-      </div>
-      Fulfilled sequence
-      <div className="box">
-        {state.finished.map((name) => (
-          <button
-            type="button"
-            key={"f-" + name}
-            className={getClassesByName(name)}
-          >
-            {name}
-          </button>
-        ))}
-      </div>
+      <div className="footer">hi</div>
     </div>
   );
 }

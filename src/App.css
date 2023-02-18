@@ -1,6 +1,7 @@
 .layout {
   width: 1fr;
   height: 1fr;
+  padding: 10pt;
 
   display: grid;
   grid:
@@ -11,7 +12,9 @@
   gap: 8px;
 }
 
-.header { grid-area: header; }
+.header { 
+  grid-area: header; 
+}
 .footer { grid-area: footer; }
 
 .main{

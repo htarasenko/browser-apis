@@ -134,7 +134,7 @@ function App() {
             );
           })}
         </div>
-        <button onClick={handleDemoClick}>Execute Demo</button>
+        <button onClick={handleDemoClick}>X</button>
         <div className="box">
           {state.finished.map((name) => (
             <button

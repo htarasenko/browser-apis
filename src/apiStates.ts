@@ -118,7 +118,6 @@ export const apiReducer = (state = INITIAL_STATE, action: any) => {
       const { activeIndex, offset } = state;
       if (!offset) return state;
       const destinationIndex = activeIndex + offset;
-      console.log("STOP_DRAG", activeIndex, offset);
       const apis = state.apis.map((api, index) => {
         if (index === destinationIndex) {
           const a = state.apis[state.activeIndex];
@@ -144,8 +143,7 @@ export const apiReducer = (state = INITIAL_STATE, action: any) => {
         return clearDragOffset({ ...api });
       });
 
-      console.log("STOP", apis);
-      return { ...state, apis };
+      return { ...state, apis, offset: 0 };
     }
     default:
       return state;
@@ -155,8 +153,4 @@ export const apiReducer = (state = INITIAL_STATE, action: any) => {
 function clearDragOffset(api: BrowserApi) {
   api.dragOffset = { x: 0, y: 0 };
   return api;
-}
-
-function isDraggedMovingUp(activeIndex: number, offset: number) {
-  return activeIndex + offset < activeIndex;
 }

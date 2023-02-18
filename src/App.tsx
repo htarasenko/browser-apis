@@ -120,7 +120,6 @@ function App() {
                 onStop={() => dispatch({ type: "STOP_DRAG" })}
                 key={"d-" + api.name}
                 position={api.dragOffset}
-                // positionOffset={api.dragOffset}
               >
                 <button
                   type="button"
@@ -135,12 +134,7 @@ function App() {
             );
           })}
         </div>
-        <br />
         <button onClick={handleDemoClick}>Execute Demo</button>
-        <br />
-        {state.finished.length
-          ? "Fulfilled sequence:"
-          : "No fulfilled sequence yet"}
         <div className="box">
           {state.finished.map((name) => (
             <button
@@ -153,7 +147,7 @@ function App() {
           ))}
         </div>
       </div>
-      <div className="footer">hi</div>
+      <div className="footer">Was made to play with APIs</div>
     </div>
   );
 }

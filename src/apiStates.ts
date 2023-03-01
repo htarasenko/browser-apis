@@ -9,7 +9,7 @@ export type ApiNames =
   | "setInterval"
   | "Web Worker"
   | "Indexed DB"
-  | "requestAnimationFrame"
+  | "RAF"
   | "promise"
   | "Synchronous";
 
@@ -39,7 +39,7 @@ export const apisMeta: { [K in ApiNames]: { url: string; color: string } } = {
     url: "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API",
     color: "red",
   },
-  requestAnimationFrame: {
+  RAF: {
     url: "https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame",
     color: "blue",
   },
@@ -60,7 +60,7 @@ export const INITIAL_STATE: State = {
     { name: "Web Worker", checked: true, dragOffset: { x: 0, y: 0 } },
     { name: "Indexed DB", checked: true, dragOffset: { x: 0, y: 0 } },
     {
-      name: "requestAnimationFrame",
+      name: "RAF",
       checked: true,
       dragOffset: { x: 0, y: 0 },
     },
@@ -94,8 +94,7 @@ export const apiReducer = (state = INITIAL_STATE, action: any) => {
     case "FINISH_API":
       return { ...state, finished: [...state.finished, payload] };
     case "START_DRAG":
-      console.log("START_DRAG");
-      return { ...state, activeDragging: true };
+      return { ...state, activeDragging: true, activeIndex: payload };
     case "MOVE": {
       const offset = payload.offset;
       const apis = state.apis.map((api, index) => {
@@ -106,7 +105,7 @@ export const apiReducer = (state = INITIAL_STATE, action: any) => {
         if (index >= payload.index + offset && index < payload.index) {
           return { ...api, dragOffset: { x: 0, y: payload.dragOffset.y } };
         }
-        //moved up
+        //moved down
         if (index <= payload.index + offset && index > payload.index) {
           return { ...api, dragOffset: { x: 0, y: -payload.dragOffset.y } };
         }
@@ -116,7 +115,15 @@ export const apiReducer = (state = INITIAL_STATE, action: any) => {
     }
     case "STOP_DRAG": {
       const { activeIndex, offset } = state;
-      if (!offset) return state;
+      if (!offset) {
+        const apis = state.apis.map((api, index) => {
+          if (index === payload) {
+            return { ...api, checked: !api.checked };
+          }
+          return api;
+        });
+        return { ...state, apis };
+      }
       const destinationIndex = activeIndex + offset;
       const apis = state.apis.map((api, index) => {
         if (index === destinationIndex) {

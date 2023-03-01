@@ -21,7 +21,7 @@ function App() {
 
   const onDragHandler = (event: any, button: any, index: number) => {
     if (!state.activeDragging) {
-      dispatch({ type: "START_DRAG" });
+      dispatch({ type: "START_DRAG", index });
     }
     const buttonRect = button.node.getBoundingClientRect();
     const offset = button.y / buttonRect.height;
@@ -68,7 +68,7 @@ function App() {
               finish(api.name);
             }, 0);
             break;
-          case "requestAnimationFrame":
+          case "RAF":
             start(api.name);
             requestAnimationFrame(() => {
               finish(api.name);
@@ -117,7 +117,7 @@ function App() {
             return (
               <Draggable
                 onDrag={(a, b) => onDragHandler(a, b, index)}
-                onStop={() => dispatch({ type: "STOP_DRAG" })}
+                onStop={() => dispatch({ type: "STOP_DRAG", payload: index })}
                 key={"d-" + api.name}
                 position={api.dragOffset}
               >
@@ -125,7 +125,6 @@ function App() {
                   type="button"
                   key={api.name}
                   className={classes}
-                  onClick={() => handleCheckboxChange(api.name)}
                   title={api.name}
                 >
                   {api.name}
